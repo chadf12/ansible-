@@ -10,6 +10,19 @@
         state: latest
         update_cache: yes
 
+    - name: check if reboot is req
+      ansible.builtin.shell:
+        cmd: "needs-restarting -r -s"
+      register: needs_restarting
+      changed_when: needs_restarting.rc == 1
+      failed_when: needs_restarting.rc == 0
+    
     - name: reboot if needed
       reboot:
-        msg: "Rebooting after package update"
+      when: needs_restarting.rc == 1    
+    
+
+    - name: install bash auto-complete
+      dnf:
+        name: bash-completion
+        state: latest      
