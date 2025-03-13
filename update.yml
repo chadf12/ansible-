@@ -1,0 +1,15 @@
+---
+
+- name: Update servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: update all packages to latest version
+      dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: reboot if needed
+      reboot:
+        msg: "Rebooting after package update"
